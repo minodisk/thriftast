@@ -7,11 +7,13 @@ import (
 	"github.com/minodisk/thriftast/ast"
 )
 
+// Lexer scans Thrift IDL to tokens.
 type Lexer struct {
 	scanner.Scanner
 	Program *ast.Program
 }
 
+// Lex lexes chunk to token and returns the type of token.
 func (l *Lexer) Lex(lval *yySymType) int {
 	t := int(l.Scan())
 	fmt.Println("-----------------------------")
@@ -32,19 +34,22 @@ func (l *Lexer) Lex(lval *yySymType) int {
 		switch name {
 		case "namespace":
 			return NAMESPACE
+		case "typedef":
+			return TYPEDEF
 		default:
-			lval.token = &ast.Identifier{Start: start, End: end, Name: name}
+			lval.identifier = &ast.Identifier{Start: start, End: end, Name: name}
 			return IDENTIFIER
 		}
 	default:
 		if name == "" {
 			return t
 		}
-		lval.token = &ast.Identifier{Start: start, End: end, Name: name}
+		lval.identifier = &ast.Identifier{Start: start, End: end, Name: name}
 		return IDENTIFIER
 	}
 }
 
+// Error throws lexing error.
 func (l *Lexer) Error(e string) {
 	panic(e)
 }

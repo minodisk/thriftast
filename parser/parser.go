@@ -12,18 +12,21 @@ type yySymType struct {
 	program     *ast.Program
 	expressions []ast.Expression
 	namespace   *ast.Namespace
+	typedef     *ast.Typedef
 
-	token *ast.Identifier
+	identifier *ast.Identifier
 }
 
 const NAMESPACE = 57346
-const IDENTIFIER = 57347
+const TYPEDEF = 57347
+const IDENTIFIER = 57348
 
 var yyToknames = [...]string{
 	"$end",
 	"error",
 	"$unk",
 	"NAMESPACE",
+	"TYPEDEF",
 	"IDENTIFIER",
 }
 var yyStatenames = [...]string{}
@@ -32,7 +35,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line parser/parser.go.y:55
+//line parser/parser.go.y:71
 
 //line yacctab:1
 var yyExca = [...]int{
@@ -43,35 +46,38 @@ var yyExca = [...]int{
 
 const yyPrivate = 57344
 
-const yyLast = 6
+const yyLast = 10
 
 var yyAct = [...]int{
 
-	6, 5, 4, 3, 2, 1,
+	10, 9, 8, 7, 5, 6, 4, 3, 2, 1,
 }
 var yyPact = [...]int{
 
-	-1000, -1000, -2, -1000, -4, -5, -1000,
+	-1000, -1000, 0, -1000, -1000, -3, -4, -5, -6, -1000,
+	-1000,
 }
 var yyPgo = [...]int{
 
-	0, 5, 4, 3,
+	0, 9, 8, 7, 6,
 }
 var yyR1 = [...]int{
 
-	0, 1, 2, 2, 3,
+	0, 1, 2, 2, 2, 3, 4,
 }
 var yyR2 = [...]int{
 
-	0, 1, 0, 2, 3,
+	0, 1, 0, 2, 2, 3, 3,
 }
 var yyChk = [...]int{
 
-	-1000, -1, -2, -3, 4, 5, 5,
+	-1000, -1, -2, -3, -4, 4, 5, 6, 6, 6,
+	6,
 }
 var yyDef = [...]int{
 
-	2, -2, 1, 3, 0, 0, 4,
+	2, -2, 1, 3, 4, 0, 0, 0, 0, 5,
+	6,
 }
 var yyTok1 = [...]int{
 
@@ -79,7 +85,7 @@ var yyTok1 = [...]int{
 }
 var yyTok2 = [...]int{
 
-	2, 3, 4, 5,
+	2, 3, 4, 5, 6,
 }
 var yyTok3 = [...]int{
 	0,
@@ -424,30 +430,45 @@ yydefault:
 
 	case 1:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.go.y:31
+		//line parser/parser.go.y:34
 		{
 			yyVAL.program = &ast.Program{Expressions: yyDollar[1].expressions}
 			yylex.(*Lexer).Program = yyVAL.program
 		}
 	case 2:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.go.y:38
+		//line parser/parser.go.y:41
 		{
 			yyVAL.expressions = nil
 		}
 	case 3:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.go.y:42
+		//line parser/parser.go.y:45
 		{
 			yyVAL.expressions = append(yyDollar[1].expressions, yyDollar[2].namespace)
 		}
 	case 4:
+		yyDollar = yyS[yypt-2 : yypt+1]
+		//line parser/parser.go.y:49
+		{
+			yyVAL.expressions = append(yyDollar[1].expressions, yyDollar[2].typedef)
+		}
+	case 5:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.go.y:48
+		//line parser/parser.go.y:55
 		{
 			yyVAL.namespace = &ast.Namespace{
-				Scope: yyDollar[2].token,
-				Name:  yyDollar[3].token,
+				Scope: yyDollar[2].identifier,
+				Name:  yyDollar[3].identifier,
+			}
+		}
+	case 6:
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line parser/parser.go.y:64
+		{
+			yyVAL.typedef = &ast.Typedef{
+				DefinitionType: yyDollar[2].identifier,
+				Identifier:     yyDollar[3].identifier,
 			}
 		}
 	}
