@@ -1,88 +1,19 @@
-//line parser.go.y:2
-package main
+//line parser/parser.go.y:2
+package parser
 
 import __yyfmt__ "fmt"
 
-//line parser.go.y:2
-import (
-	"encoding/json"
-	"fmt"
-	"os"
-	"text/scanner"
-)
+//line parser/parser.go.y:2
+import "github.com/minodisk/thriftast/ast"
 
-type Expression interface {
-	Type() string
-}
-
-type Program struct {
-	Expressions []Expression
-}
-
-func (p *Program) Type() string {
-	return "Program"
-}
-
-func (p *Program) MarshalJSON() ([]byte, error) {
-	typed := struct {
-		Program
-		Type string
-	}{
-		*p,
-		p.Type(),
-	}
-	return json.Marshal(typed)
-}
-
-type Namespace struct {
-	Scope *Identifier
-	Name  *Identifier
-}
-
-func (n *Namespace) Type() string {
-	return "Namespace"
-}
-
-func (n *Namespace) MarshalJSON() ([]byte, error) {
-	typed := struct {
-		Namespace
-		Type string
-	}{
-		*n,
-		n.Type(),
-	}
-	return json.Marshal(typed)
-}
-
-type Identifier struct {
-	Start scanner.Position
-	End   scanner.Position
-	Name  string
-}
-
-func (i *Identifier) Type() string {
-	return "Identifier"
-}
-
-func (i *Identifier) MarshalJSON() ([]byte, error) {
-	typed := struct {
-		Identifier
-		Type string
-	}{
-		*i,
-		i.Type(),
-	}
-	return json.Marshal(typed)
-}
-
-//line parser.go.y:76
+//line parser/parser.go.y:8
 type yySymType struct {
 	yys         int
-	program     *Program
-	expressions []Expression
-	namespace   *Namespace
+	program     *ast.Program
+	expressions []ast.Expression
+	namespace   *ast.Namespace
 
-	token *Identifier
+	token *ast.Identifier
 }
 
 const NAMESPACE = 57346
@@ -101,63 +32,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line parser.go.y:123
-
-type Lexer struct {
-	scanner.Scanner
-	Program *Program
-}
-
-func (l *Lexer) Lex(lval *yySymType) int {
-	t := int(l.Scan())
-	fmt.Println("-----------------------------")
-	fmt.Printf("%s, %d %d %d %d %d\n", l.Pos(), t, scanner.Ident, scanner.Int, scanner.String, scanner.Char)
-
-	name := l.TokenText()
-	length := len(name)
-	start := l.Pos()
-	end := scanner.Position{
-		Filename: start.Filename,
-		Offset:   start.Offset + length,
-		Line:     start.Line,
-		Column:   start.Column + length,
-	}
-
-	switch t {
-	case scanner.Ident:
-		switch name {
-		case "namespace":
-			return NAMESPACE
-		default:
-			lval.token = &Identifier{Start: start, End: end, Name: name}
-			return IDENTIFIER
-		}
-	default:
-		if name == "" {
-			return t
-		}
-		lval.token = &Identifier{Start: start, End: end, Name: name}
-		return IDENTIFIER
-	}
-}
-
-func (l *Lexer) Error(e string) {
-	panic(e)
-}
-
-func main() {
-	file, err := os.Open("test.thrift")
-	if err != nil {
-		panic(err)
-	}
-
-	l := new(Lexer)
-	l.Init(file)
-	yyParse(l)
-	fmt.Println("========================")
-	j, _ := json.MarshalIndent(l.Program, "", "  ")
-	fmt.Printf("%s\n", j)
-}
+//line parser/parser.go.y:55
 
 //line yacctab:1
 var yyExca = [...]int{
@@ -549,28 +424,28 @@ yydefault:
 
 	case 1:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser.go.y:99
+		//line parser/parser.go.y:31
 		{
-			yyVAL.program = &Program{Expressions: yyDollar[1].expressions}
+			yyVAL.program = &ast.Program{Expressions: yyDollar[1].expressions}
 			yylex.(*Lexer).Program = yyVAL.program
 		}
 	case 2:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser.go.y:106
+		//line parser/parser.go.y:38
 		{
 			yyVAL.expressions = nil
 		}
 	case 3:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser.go.y:110
+		//line parser/parser.go.y:42
 		{
 			yyVAL.expressions = append(yyDollar[1].expressions, yyDollar[2].namespace)
 		}
 	case 4:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser.go.y:116
+		//line parser/parser.go.y:48
 		{
-			yyVAL.namespace = &Namespace{
+			yyVAL.namespace = &ast.Namespace{
 				Scope: yyDollar[2].token,
 				Name:  yyDollar[3].token,
 			}
