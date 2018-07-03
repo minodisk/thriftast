@@ -5,44 +5,95 @@ import __yyfmt__ "fmt"
 
 //line parser.go.y:2
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 	"text/scanner"
 )
 
-type Expression interface{}
+type Expression interface {
+	Type() string
+}
 
-type Token struct {
-	token   int
-	literal string
+type Program struct {
+	Expressions []Expression
+}
+
+func (p *Program) Type() string {
+	return "Program"
+}
+
+func (p *Program) MarshalJSON() ([]byte, error) {
+	typed := struct {
+		Program
+		Type string
+	}{
+		*p,
+		p.Type(),
+	}
+	return json.Marshal(typed)
 }
 
 type Namespace struct {
-	Scope string
+	Scope *Identifier
+	Name  *Identifier
+}
+
+func (n *Namespace) Type() string {
+	return "Namespace"
+}
+
+func (n *Namespace) MarshalJSON() ([]byte, error) {
+	typed := struct {
+		Namespace
+		Type string
+	}{
+		*n,
+		n.Type(),
+	}
+	return json.Marshal(typed)
+}
+
+type Identifier struct {
+	Start scanner.Position
+	End   scanner.Position
 	Name  string
 }
 
-//line parser.go.y:23
-type yySymType struct {
-	yys int
-	str string
-
-	token Token
-	expr  Expression
-
-	namespace *Namespace
+func (i *Identifier) Type() string {
+	return "Identifier"
 }
 
-const IDENTIFIER = 57346
-const NAMESPACE = 57347
+func (i *Identifier) MarshalJSON() ([]byte, error) {
+	typed := struct {
+		Identifier
+		Type string
+	}{
+		*i,
+		i.Type(),
+	}
+	return json.Marshal(typed)
+}
+
+//line parser.go.y:76
+type yySymType struct {
+	yys         int
+	program     *Program
+	expressions []Expression
+	namespace   *Namespace
+
+	token *Identifier
+}
+
+const NAMESPACE = 57346
+const IDENTIFIER = 57347
 
 var yyToknames = [...]string{
 	"$end",
 	"error",
 	"$unk",
-	"IDENTIFIER",
 	"NAMESPACE",
-	"'*'",
+	"IDENTIFIER",
 }
 var yyStatenames = [...]string{}
 
@@ -50,33 +101,44 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line parser.go.y:56
+//line parser.go.y:123
 
 type Lexer struct {
 	scanner.Scanner
-	result Expression
+	Program *Program
 }
 
 func (l *Lexer) Lex(lval *yySymType) int {
-	token := int(l.Scan())
+	t := int(l.Scan())
 	fmt.Println("-----------------------------")
-	fmt.Printf("%+v, %s\n", l.Pos(), token, scanner.Ident, scanner.Int, scanner.String, NAMESPACE)
-	fmt.Println("-----------------------------")
+	fmt.Printf("%s, %d %d %d %d %d\n", l.Pos(), t, scanner.Ident, scanner.Int, scanner.String, scanner.Char)
 
-	literal := l.TokenText()
-
-	switch token {
-	case scanner.EOF:
-	case scanner.Ident:
-		switch literal {
-		case "namespace":
-			token = NAMESPACE
-		}
+	name := l.TokenText()
+	length := len(name)
+	start := l.Pos()
+	end := scanner.Position{
+		Filename: start.Filename,
+		Offset:   start.Offset + length,
+		Line:     start.Line,
+		Column:   start.Column + length,
 	}
 
-	lval.token = Token{token: token, literal: literal}
-
-	return token
+	switch t {
+	case scanner.Ident:
+		switch name {
+		case "namespace":
+			return NAMESPACE
+		default:
+			lval.token = &Identifier{Start: start, End: end, Name: name}
+			return IDENTIFIER
+		}
+	default:
+		if name == "" {
+			return t
+		}
+		lval.token = &Identifier{Start: start, End: end, Name: name}
+		return IDENTIFIER
+	}
 }
 
 func (l *Lexer) Error(e string) {
@@ -92,7 +154,9 @@ func main() {
 	l := new(Lexer)
 	l.Init(file)
 	yyParse(l)
-	fmt.Printf("%#v\n", l.result)
+	fmt.Println("========================")
+	j, _ := json.MarshalIndent(l.Program, "", "  ")
+	fmt.Printf("%s\n", j)
 }
 
 //line yacctab:1
@@ -108,39 +172,35 @@ const yyLast = 6
 
 var yyAct = [...]int{
 
-	4, 6, 3, 2, 5, 1,
+	6, 5, 4, 3, 2, 1,
 }
 var yyPact = [...]int{
 
-	-2, -1000, -4, 0, -3, -1000, -1000,
+	-1000, -1000, -2, -1000, -4, -5, -1000,
 }
 var yyPgo = [...]int{
 
-	0, 5,
+	0, 5, 4, 3,
 }
 var yyR1 = [...]int{
 
-	0, 1, 1,
+	0, 1, 2, 2, 3,
 }
 var yyR2 = [...]int{
 
-	0, 3, 3,
+	0, 1, 0, 2, 3,
 }
 var yyChk = [...]int{
 
-	-1000, -1, 5, 6, 4, 4, 4,
+	-1000, -1, -2, -3, 4, 5, 5,
 }
 var yyDef = [...]int{
 
-	0, -2, 0, 0, 0, 1, 2,
+	2, -2, 1, 3, 0, 0, 4,
 }
 var yyTok1 = [...]int{
 
-	1, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 3, 3, 3, 3, 3, 3, 3, 3,
-	3, 3, 6,
+	1,
 }
 var yyTok2 = [...]int{
 
@@ -488,21 +548,31 @@ yydefault:
 	switch yynt {
 
 	case 1:
-		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser.go.y:42
+		yyDollar = yyS[yypt-1 : yypt+1]
+		//line parser.go.y:99
 		{
-			yyVAL.namespace = &Namespace{
-				Scope: "*",
-				Name:  yyDollar[3].str,
-			}
+			yyVAL.program = &Program{Expressions: yyDollar[1].expressions}
+			yylex.(*Lexer).Program = yyVAL.program
 		}
 	case 2:
+		yyDollar = yyS[yypt-0 : yypt+1]
+		//line parser.go.y:106
+		{
+			yyVAL.expressions = nil
+		}
+	case 3:
+		yyDollar = yyS[yypt-2 : yypt+1]
+		//line parser.go.y:110
+		{
+			yyVAL.expressions = append(yyDollar[1].expressions, yyDollar[2].namespace)
+		}
+	case 4:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser.go.y:49
+		//line parser.go.y:116
 		{
 			yyVAL.namespace = &Namespace{
-				Scope: yyDollar[2].str,
-				Name:  yyDollar[3].str,
+				Scope: yyDollar[2].token,
+				Name:  yyDollar[3].token,
 			}
 		}
 	}

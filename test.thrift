@@ -1,2 +1,2 @@
-typedef i32 MyInteger
-typedef Tweet ReTweet
+namespace f foo
+namespace * bar
