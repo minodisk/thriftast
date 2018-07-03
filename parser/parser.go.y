@@ -10,8 +10,8 @@ import "github.com/minodisk/thriftast/ast"
   expressions []ast.Expression
   namespace   *ast.Namespace
   typedef     *ast.Typedef
-
-  identifier  *ast.Identifier
+  ident       *ast.Ident
+  dot         *ast.Dot
 }
 
 // Types
@@ -19,13 +19,16 @@ import "github.com/minodisk/thriftast/ast"
 %type <expressions> expressions
 %type <namespace>   namespace
 %type <typedef>     typedef
+%type <ident>       ident
+%type <dot>         dot
 
-// Reserved keywords
+// Keywords
 %token NAMESPACE
 %token TYPEDEF
 
 // Tokens
-%token <identifier> IDENTIFIER
+%token <ident> IDENT
+%token <dot>   DOT
 
 %%
 
@@ -51,7 +54,7 @@ expressions
     }
 
 namespace
-  : NAMESPACE IDENTIFIER IDENTIFIER
+  : NAMESPACE ident ident
     {
       $$ = &ast.Namespace{
         Scope: $2,
@@ -60,12 +63,32 @@ namespace
     }
 
 typedef
-  : TYPEDEF IDENTIFIER IDENTIFIER
+  : TYPEDEF ident ident
     {
       $$ = &ast.Typedef{
         DefinitionType: $2,
         Identifier: $3,
       }
+    }
+
+ident
+  : IDENT
+    {
+      $$ = $1
+    }
+  | IDENT dot
+    {
+      $$ = $1.Append($2)
+    }
+  | ident ident
+    {
+      $$ = $1.Append($2)
+    }
+
+dot
+  : DOT
+    {
+      $$ =$1
     }
 
 %%

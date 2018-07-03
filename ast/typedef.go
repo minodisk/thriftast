@@ -3,8 +3,8 @@ package ast
 import "encoding/json"
 
 type Typedef struct {
-	DefinitionType *Identifier
-	Identifier     *Identifier
+	DefinitionType *Ident
+	Identifier     *Ident
 }
 
 func (t *Typedef) Type() string {

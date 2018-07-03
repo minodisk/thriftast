@@ -28,7 +28,7 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	}
 
 	fmt.Println("-----------------------------")
-	fmt.Println(name, length)
+	fmt.Println(t, name, length)
 	fmt.Printf("%s ~ %s\n", start, end)
 
 	switch t {
@@ -39,15 +39,18 @@ func (l *Lexer) Lex(lval *yySymType) int {
 		case "typedef":
 			return TYPEDEF
 		default:
-			lval.identifier = &ast.Identifier{Start: start, End: end, Name: name}
-			return IDENTIFIER
+			lval.ident = ast.NewIdent(start, end, name)
+			return IDENT
 		}
+	case 46: // .
+		lval.dot = ast.NewDot(start, end)
+		return DOT
 	default:
 		if name == "" {
 			return t
 		}
-		lval.identifier = &ast.Identifier{Start: start, End: end, Name: name}
-		return IDENTIFIER
+		lval.ident = ast.NewIdent(start, end, name)
+		return IDENT
 	}
 }
 

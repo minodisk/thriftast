@@ -3,8 +3,8 @@ package ast
 import "encoding/json"
 
 type Namespace struct {
-	Scope *Identifier
-	Name  *Identifier
+	Scope *Ident
+	Name  *Ident
 }
 
 func (n *Namespace) Type() string {
