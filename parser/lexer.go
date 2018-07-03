@@ -16,18 +16,20 @@ type Lexer struct {
 // Lex lexes chunk to token and returns the type of token.
 func (l *Lexer) Lex(lval *yySymType) int {
 	t := int(l.Scan())
-	fmt.Println("-----------------------------")
-	fmt.Printf("%s, %d %d %d %d %d\n", l.Pos(), t, scanner.Ident, scanner.Int, scanner.String, scanner.Char)
 
 	name := l.TokenText()
 	length := len(name)
-	start := l.Pos()
-	end := scanner.Position{
-		Filename: start.Filename,
-		Offset:   start.Offset + length,
-		Line:     start.Line,
-		Column:   start.Column + length,
+	end := l.Pos()
+	start := scanner.Position{
+		Filename: end.Filename,
+		Offset:   end.Offset - length,
+		Line:     end.Line,
+		Column:   end.Column - length,
 	}
+
+	fmt.Println("-----------------------------")
+	fmt.Println(name, length)
+	fmt.Printf("%s ~ %s\n", start, end)
 
 	switch t {
 	case scanner.Ident:
