@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"reflect"
 	"testing"
-	"text/scanner"
 
 	"github.com/minodisk/thriftast/ast"
 	"github.com/minodisk/thriftast/parser"
@@ -21,36 +20,45 @@ func TestParse_Typedef(t *testing.T) {
 			&ast.Program{
 				Expressions: []ast.Expression{
 					&ast.Typedef{
-						DefinitionType: &ast.Identifier{
-							Start: scanner.Position{
-								Filename: "",
-								Offset:   8,
-								Line:     1,
-								Column:   9,
+						Keyword: ast.NewKeyword(
+							"Typedef",
+							&ast.Pos{
+								Offset: 0,
+								Line:   1,
+								Column: 1,
 							},
-							End: scanner.Position{
-								Filename: "",
-								Offset:   11,
-								Line:     1,
-								Column:   12,
+							&ast.Pos{
+								Offset: 7,
+								Line:   1,
+								Column: 8,
 							},
-							Name: "i32",
-						},
-						Identifier: &ast.Identifier{
-							Start: scanner.Position{
-								Filename: "",
-								Offset:   12,
-								Line:     1,
-								Column:   13,
+						),
+						DefinitionType: ast.NewIdent(
+							&ast.Pos{
+								Offset: 8,
+								Line:   1,
+								Column: 9,
 							},
-							End: scanner.Position{
-								Filename: "",
-								Offset:   21,
-								Line:     1,
-								Column:   22,
+							&ast.Pos{
+								Offset: 11,
+								Line:   1,
+								Column: 12,
 							},
-							Name: "MyInteger",
-						},
+							"i32",
+						),
+						Identifier: ast.NewIdent(
+							&ast.Pos{
+								Offset: 12,
+								Line:   1,
+								Column: 13,
+							},
+							&ast.Pos{
+								Offset: 21,
+								Line:   1,
+								Column: 22,
+							},
+							"MyInteger",
+						),
 					},
 				},
 			},
@@ -60,36 +68,45 @@ func TestParse_Typedef(t *testing.T) {
 			&ast.Program{
 				Expressions: []ast.Expression{
 					&ast.Typedef{
-						DefinitionType: &ast.Identifier{
-							Start: scanner.Position{
-								Filename: "",
-								Offset:   8,
-								Line:     1,
-								Column:   9,
+						Keyword: ast.NewKeyword(
+							"Typedef",
+							&ast.Pos{
+								Offset: 0,
+								Line:   1,
+								Column: 1,
 							},
-							End: scanner.Position{
-								Filename: "",
-								Offset:   13,
-								Line:     1,
-								Column:   14,
+							&ast.Pos{
+								Offset: 7,
+								Line:   1,
+								Column: 8,
 							},
-							Name: "Tweet",
-						},
-						Identifier: &ast.Identifier{
-							Start: scanner.Position{
-								Filename: "",
-								Offset:   14,
-								Line:     1,
-								Column:   15,
+						),
+						DefinitionType: ast.NewIdent(
+							&ast.Pos{
+								Offset: 8,
+								Line:   1,
+								Column: 9,
 							},
-							End: scanner.Position{
-								Filename: "",
-								Offset:   21,
-								Line:     1,
-								Column:   22,
+							&ast.Pos{
+								Offset: 13,
+								Line:   1,
+								Column: 14,
 							},
-							Name: "ReTweet",
-						},
+							"Tweet",
+						),
+						Identifier: ast.NewIdent(
+							&ast.Pos{
+								Offset: 14,
+								Line:   1,
+								Column: 15,
+							},
+							&ast.Pos{
+								Offset: 21,
+								Line:   1,
+								Column: 22,
+							},
+							"ReTweet",
+						),
 					},
 				},
 			},

@@ -22,13 +22,11 @@ import "github.com/minodisk/thriftast/ast"
 %type <ident>       ident
 %type <dot>         dot
 
-// Keywords
-%token NAMESPACE
-%token TYPEDEF
-
 // Tokens
-%token <ident> IDENT
-%token <dot>   DOT
+%token <namespace>  NAMESPACE
+%token <typedef>    TYPEDEF
+%token <ident>      IDENT
+%token <dot>        DOT
 
 %%
 
@@ -56,19 +54,17 @@ expressions
 namespace
   : NAMESPACE ident ident
     {
-      $$ = &ast.Namespace{
-        Scope: $2,
-        Name: $3,
-      }
+      $$ = $1
+      $$.Scope = $2
+      $$.Name = $3
     }
 
 typedef
   : TYPEDEF ident ident
     {
-      $$ = &ast.Typedef{
-        DefinitionType: $2,
-        Identifier: $3,
-      }
+      $$ = $1
+      $$.DefinitionType = $2
+      $$.Identifier = $3
     }
 
 ident

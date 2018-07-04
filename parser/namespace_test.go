@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"reflect"
 	"testing"
-	"text/scanner"
 
 	"github.com/minodisk/thriftast/ast"
 	"github.com/minodisk/thriftast/parser"
@@ -21,36 +20,45 @@ func TestParse_Namespace(t *testing.T) {
 			&ast.Program{
 				Expressions: []ast.Expression{
 					&ast.Namespace{
-						Scope: &ast.Identifier{
-							Start: scanner.Position{
-								Filename: "",
-								Offset:   10,
-								Line:     1,
-								Column:   11,
+						Keyword: ast.NewKeyword(
+							"Namespace",
+							&ast.Pos{
+								Offset: 0,
+								Line:   1,
+								Column: 1,
 							},
-							End: scanner.Position{
-								Filename: "",
-								Offset:   13,
-								Line:     1,
-								Column:   14,
+							&ast.Pos{
+								Offset: 9,
+								Line:   1,
+								Column: 10,
 							},
-							Name: "cpp",
-						},
-						Name: &ast.Identifier{
-							Start: scanner.Position{
-								Filename: "",
-								Offset:   14,
-								Line:     1,
-								Column:   15,
+						),
+						Scope: ast.NewIdent(
+							&ast.Pos{
+								Offset: 10,
+								Line:   1,
+								Column: 11,
 							},
-							End: scanner.Position{
-								Filename: "",
-								Offset:   34,
-								Line:     1,
-								Column:   35,
+							&ast.Pos{
+								Offset: 13,
+								Line:   1,
+								Column: 14,
 							},
-							Name: "com.example.project",
-						},
+							"cpp",
+						),
+						Name: ast.NewIdent(
+							&ast.Pos{
+								Offset: 14,
+								Line:   1,
+								Column: 15,
+							},
+							&ast.Pos{
+								Offset: 33,
+								Line:   1,
+								Column: 34,
+							},
+							"com.example.project",
+						),
 					},
 				},
 			},
@@ -60,36 +68,45 @@ func TestParse_Namespace(t *testing.T) {
 			&ast.Program{
 				Expressions: []ast.Expression{
 					&ast.Namespace{
-						Scope: &ast.Identifier{
-							Start: scanner.Position{
-								Filename: "",
-								Offset:   10,
-								Line:     1,
-								Column:   11,
+						Keyword: ast.NewKeyword(
+							"Namespace",
+							&ast.Pos{
+								Offset: 0,
+								Line:   1,
+								Column: 1,
 							},
-							End: scanner.Position{
-								Filename: "",
-								Offset:   11,
-								Line:     1,
-								Column:   12,
+							&ast.Pos{
+								Offset: 9,
+								Line:   1,
+								Column: 10,
 							},
-							Name: "*",
-						},
-						Name: &ast.Identifier{
-							Start: scanner.Position{
-								Filename: "",
-								Offset:   12,
-								Line:     1,
-								Column:   13,
+						),
+						Scope: ast.NewIdent(
+							&ast.Pos{
+								Offset: 10,
+								Line:   1,
+								Column: 11,
 							},
-							End: scanner.Position{
-								Filename: "",
-								Offset:   31,
-								Line:     1,
-								Column:   32,
+							&ast.Pos{
+								Offset: 11,
+								Line:   1,
+								Column: 12,
 							},
-							Name: "com.example.project",
-						},
+							"*",
+						),
+						Name: ast.NewIdent(
+							&ast.Pos{
+								Offset: 12,
+								Line:   1,
+								Column: 13,
+							},
+							&ast.Pos{
+								Offset: 31,
+								Line:   1,
+								Column: 32,
+							},
+							"com.example.project",
+						),
 					},
 				},
 			},

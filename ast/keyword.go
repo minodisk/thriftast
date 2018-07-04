@@ -1,31 +1,15 @@
 package ast
 
-import "text/scanner"
-
-type Dot struct {
-	start scanner.Position
-	end   scanner.Position
+type Keyword struct {
+	Type  string `json:"type"`
+	Start *Pos   `json:"start"`
+	End   *Pos   `json:"end"`
 }
 
-func NewDot(start, end scanner.Position) *Dot {
-	return &Dot{
+func NewKeyword(t string, start, end *Pos) *Keyword {
+	return &Keyword{
+		t,
 		start,
 		end,
 	}
-}
-
-func (d *Dot) Type() string {
-	return "Dot"
-}
-
-func (d *Dot) Start() scanner.Position {
-	return d.start
-}
-
-func (d *Dot) End() scanner.Position {
-	return d.end
-}
-
-func (d *Dot) Name() string {
-	return "."
 }

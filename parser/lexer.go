@@ -19,12 +19,11 @@ func (l *Lexer) Lex(lval *yySymType) int {
 
 	name := l.TokenText()
 	length := len(name)
-	end := l.Pos()
-	start := scanner.Position{
-		Filename: end.Filename,
-		Offset:   end.Offset - length,
-		Line:     end.Line,
-		Column:   end.Column - length,
+	end := ast.NewPos(l.Pos())
+	start := &ast.Pos{
+		Offset: end.Offset - length,
+		Line:   end.Line,
+		Column: end.Column - length,
 	}
 
 	fmt.Println("-----------------------------")
@@ -35,8 +34,13 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	case scanner.Ident:
 		switch name {
 		case "namespace":
+			lval.namespace = ast.NewNamespace(
+				start,
+				end,
+			)
 			return NAMESPACE
 		case "typedef":
+			lval.typedef = ast.NewTypedef(start, end)
 			return TYPEDEF
 		default:
 			lval.ident = ast.NewIdent(start, end, name)

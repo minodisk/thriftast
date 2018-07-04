@@ -3,7 +3,7 @@ package ast
 import "encoding/json"
 
 type Program struct {
-	Expressions []Expression
+	Expressions []Expression `json:"expressions"`
 }
 
 func (p *Program) Type() string {
@@ -12,11 +12,11 @@ func (p *Program) Type() string {
 
 func (p *Program) MarshalJSON() ([]byte, error) {
 	typed := struct {
+		Type string `json:"type"`
 		Program
-		Type string
 	}{
-		*p,
 		p.Type(),
+		*p,
 	}
 	return json.Marshal(typed)
 }
