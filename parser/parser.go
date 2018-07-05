@@ -1,12 +1,12 @@
-//line parser/parser.go.y:2
+//line ./parser/parser.go.y:2
 package parser
 
 import __yyfmt__ "fmt"
 
-//line parser/parser.go.y:2
+//line ./parser/parser.go.y:2
 import "github.com/minodisk/thriftast/ast"
 
-//line parser/parser.go.y:8
+//line ./parser/parser.go.y:8
 type yySymType struct {
 	yys         int
 	program     *ast.Program
@@ -37,7 +37,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line parser/parser.go.y:90
+//line ./parser/parser.go.y:90
 
 //line yacctab:1
 var yyExca = [...]int{
@@ -435,32 +435,32 @@ yydefault:
 
 	case 1:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.go.y:35
+		//line ./parser/parser.go.y:35
 		{
 			yyVAL.program = &ast.Program{Expressions: yyDollar[1].expressions}
 			yylex.(*Lexer).Program = yyVAL.program
 		}
 	case 2:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line parser/parser.go.y:42
+		//line ./parser/parser.go.y:42
 		{
 			yyVAL.expressions = nil
 		}
 	case 3:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.go.y:46
+		//line ./parser/parser.go.y:46
 		{
 			yyVAL.expressions = append(yyDollar[1].expressions, yyDollar[2].namespace)
 		}
 	case 4:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.go.y:50
+		//line ./parser/parser.go.y:50
 		{
 			yyVAL.expressions = append(yyDollar[1].expressions, yyDollar[2].typedef)
 		}
 	case 5:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.go.y:56
+		//line ./parser/parser.go.y:56
 		{
 			yyVAL.namespace = yyDollar[1].namespace
 			yyVAL.namespace.Scope = yyDollar[2].ident
@@ -468,7 +468,7 @@ yydefault:
 		}
 	case 6:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line parser/parser.go.y:64
+		//line ./parser/parser.go.y:64
 		{
 			yyVAL.typedef = yyDollar[1].typedef
 			yyVAL.typedef.DefinitionType = yyDollar[2].ident
@@ -476,25 +476,25 @@ yydefault:
 		}
 	case 7:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.go.y:72
+		//line ./parser/parser.go.y:72
 		{
 			yyVAL.ident = yyDollar[1].ident
 		}
 	case 8:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.go.y:76
+		//line ./parser/parser.go.y:76
 		{
 			yyVAL.ident = yyDollar[1].ident.Append(yyDollar[2].dot)
 		}
 	case 9:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line parser/parser.go.y:80
+		//line ./parser/parser.go.y:80
 		{
 			yyVAL.ident = yyDollar[1].ident.Append(yyDollar[2].ident)
 		}
 	case 10:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line parser/parser.go.y:86
+		//line ./parser/parser.go.y:86
 		{
 			yyVAL.dot = yyDollar[1].dot
 		}
