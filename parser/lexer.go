@@ -33,6 +33,12 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	switch t {
 	case scanner.Ident:
 		switch name {
+		case "include":
+			lval.include = ast.NewInclude(
+				start,
+				end,
+			)
+			return INCLUDE
 		case "namespace":
 			lval.namespace = ast.NewNamespace(
 				start,

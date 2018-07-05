@@ -8,6 +8,7 @@ import "github.com/minodisk/thriftast/ast"
 %union{
   program     *ast.Program
   expressions []ast.Expression
+  include     *ast.Include
   namespace   *ast.Namespace
   typedef     *ast.Typedef
   ident       *ast.Ident
@@ -17,15 +18,20 @@ import "github.com/minodisk/thriftast/ast"
 // Types
 %type <program>     program
 %type <expressions> expressions
+%type <include>     include
 %type <namespace>   namespace
 %type <typedef>     typedef
 %type <ident>       ident
+%type <string>      string
 %type <dot>         dot
 
-// Tokens
+// Keywords
+%token <include>    INCLUDE
 %token <namespace>  NAMESPACE
 %token <typedef>    TYPEDEF
+// Tokens
 %token <ident>      IDENT
+%token <ident>      QUOTE
 %token <dot>        DOT
 
 %%
@@ -49,6 +55,19 @@ expressions
   | expressions typedef
     {
       $$ = append($1, $2)
+    }
+
+include
+  : INCLUDE string
+    {
+      $$ = $1
+      $$.Path = $2
+    }
+  | INCLUDE ident string
+    {
+      $$ = $1
+      $$.Name = $2
+      $$.Path = $3
     }
 
 namespace
@@ -79,6 +98,16 @@ ident
   | ident ident
     {
       $$ = $1.Append($2)
+    }
+
+string
+  : SQUOTE ident SQUOTE
+    {
+      $$ = $1
+    }
+  | DQUOTE ident DQUOTE
+    {
+      $$ = $1
     }
 
 dot
