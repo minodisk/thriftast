@@ -12,6 +12,7 @@ import "github.com/minodisk/thriftast/ast"
   namespace   *ast.Namespace
   typedef     *ast.Typedef
   ident       *ast.Ident
+  string      *ast.String
   dot         *ast.Dot
 }
 
@@ -31,7 +32,7 @@ import "github.com/minodisk/thriftast/ast"
 %token <typedef>    TYPEDEF
 // Tokens
 %token <ident>      IDENT
-%token <ident>      QUOTE
+%token <string>     STRING
 %token <dot>        DOT
 
 %%
@@ -47,6 +48,10 @@ expressions
   : /* no expressions */
     {
       $$ = nil
+    }
+  | expressions include
+    {
+      $$ = append($1, $2)
     }
   | expressions namespace
     {
@@ -101,11 +106,7 @@ ident
     }
 
 string
-  : SQUOTE ident SQUOTE
-    {
-      $$ = $1
-    }
-  | DQUOTE ident DQUOTE
+  : STRING
     {
       $$ = $1
     }

@@ -5,27 +5,46 @@ import (
 )
 
 type String struct {
-	Keyword *Keyword `json:"keyword"`
-	Name    *Ident   `json:"name"`
+	start *Pos
+	end   *Pos
+	name  string
 }
 
-func NewString(start, end *Pos) *String {
+func NewString(start, end *Pos, name string) *String {
 	return &String{
-		Keyword: NewKeyword("String", start, end),
+		start,
+		end,
+		name,
 	}
 }
 
-func (n *String) Type() string {
+func (s *String) Type() string {
 	return "String"
 }
 
-func (n *String) MarshalJSON() ([]byte, error) {
+func (s *String) Start() *Pos {
+	return s.start
+}
+
+func (s *String) End() *Pos {
+	return s.end
+}
+
+func (s *String) Name() string {
+	return s.name
+}
+
+func (s *String) MarshalJSON() ([]byte, error) {
 	typed := struct {
-		Type string `json:"type"`
-		String
+		Type  string `json:"type"`
+		Start *Pos   `json:"start"`
+		End   *Pos   `json:"end"`
+		Name  string `json:"name"`
 	}{
-		n.Type(),
-		*n,
+		s.Type(),
+		s.Start(),
+		s.End(),
+		s.Name(),
 	}
 	return json.Marshal(typed)
 }

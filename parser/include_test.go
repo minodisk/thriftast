@@ -1,13 +1,10 @@
 package parser_test
 
 import (
-	"bytes"
-	"encoding/json"
-	"reflect"
 	"testing"
 
 	"github.com/minodisk/thriftast/ast"
-	"github.com/minodisk/thriftast/parser"
+	"github.com/minodisk/thriftast/tests"
 )
 
 func TestParse_Include(t *testing.T) {
@@ -28,21 +25,20 @@ func TestParse_Include(t *testing.T) {
 								Column: 1,
 							},
 							&ast.Pos{
-								Offset: 8,
+								Offset: 7,
 								Line:   1,
-								Column: 9,
+								Column: 8,
 							},
 						),
 						Path: ast.NewString(
 							&ast.Pos{
-								Offset: 9,
+								Offset: 8,
 								Line:   1,
-								Column: 10,
-							},
-							&ast.Pos{
-								Offset: 23,
+								Column: 9,
+							}, &ast.Pos{
+								Offset: 22,
 								Line:   1,
-								Column: 24,
+								Column: 23,
 							},
 							`"tweet.thrift"`,
 						),
@@ -63,34 +59,33 @@ func TestParse_Include(t *testing.T) {
 								Column: 1,
 							},
 							&ast.Pos{
-								Offset: 8,
+								Offset: 7,
 								Line:   1,
-								Column: 9,
+								Column: 8,
 							},
 						),
 						Name: ast.NewIdent(
 							&ast.Pos{
-								Offset: 9,
+								Offset: 8,
 								Line:   1,
-								Column: 10,
+								Column: 9,
 							},
 							&ast.Pos{
-								Offset: 14,
+								Offset: 13,
 								Line:   1,
-								Column: 15,
+								Column: 14,
 							},
 							`tweet`,
 						),
 						Path: ast.NewString(
 							&ast.Pos{
-								Offset: 15,
+								Offset: 14,
 								Line:   1,
-								Column: 16,
-							},
-							&ast.Pos{
-								Offset: 29,
+								Column: 15,
+							}, &ast.Pos{
+								Offset: 28,
 								Line:   1,
-								Column: 30,
+								Column: 29,
 							},
 							`"tweet.thrift"`,
 						),
@@ -101,12 +96,7 @@ func TestParse_Include(t *testing.T) {
 	} {
 		c := c
 		t.Run(c.in, func(t *testing.T) {
-			got := parser.Parse(bytes.NewBuffer([]byte(c.in)))
-			if !reflect.DeepEqual(*got, *c.out) {
-				g, _ := json.Marshal(got)
-				w, _ := json.Marshal(c.out)
-				t.Errorf("\ngot:\n%s\nwant:\n%s", g, w)
-			}
+			tests.TestDiff(t, c.in, c.out)
 		})
 	}
 }

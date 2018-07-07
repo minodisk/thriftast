@@ -17,8 +17,8 @@ type Lexer struct {
 func (l *Lexer) Lex(lval *yySymType) int {
 	t := int(l.Scan())
 
-	name := l.TokenText()
-	length := len(name)
+	token := l.TokenText()
+	length := len(token)
 	end := ast.NewPos(l.Pos())
 	start := &ast.Pos{
 		Offset: end.Offset - length,
@@ -27,12 +27,12 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	}
 
 	fmt.Println("-----------------------------")
-	fmt.Println(t, name, length)
+	fmt.Println(t, token, length, scanner.String)
 	fmt.Printf("%s ~ %s\n", start, end)
 
 	switch t {
 	case scanner.Ident:
-		switch name {
+		switch token {
 		case "include":
 			lval.include = ast.NewInclude(
 				start,
@@ -49,17 +49,20 @@ func (l *Lexer) Lex(lval *yySymType) int {
 			lval.typedef = ast.NewTypedef(start, end)
 			return TYPEDEF
 		default:
-			lval.ident = ast.NewIdent(start, end, name)
+			lval.ident = ast.NewIdent(start, end, token)
 			return IDENT
 		}
+	case scanner.String:
+		lval.string = ast.NewString(start, end, token)
+		return STRING
 	case 46: // .
 		lval.dot = ast.NewDot(start, end)
 		return DOT
 	default:
-		if name == "" {
+		if token == "" {
 			return t
 		}
-		lval.ident = ast.NewIdent(start, end, name)
+		lval.ident = ast.NewIdent(start, end, token)
 		return IDENT
 	}
 }
