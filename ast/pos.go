@@ -20,7 +20,7 @@ func NewPos(p scanner.Position) *Pos {
 }
 
 func (p *Pos) String() string {
-	return fmt.Sprintf("%d:%d", p.Line, p.Column)
+	return fmt.Sprintf("%d:%d(%d)", p.Line, p.Column, p.Offset)
 }
 
 func (p *Pos) MarshalJSON() ([]byte, error) {

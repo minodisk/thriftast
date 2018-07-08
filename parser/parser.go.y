@@ -118,6 +118,32 @@ Const
       $$.Value = $5
     }
 
+function
+  : ident IDENT L_BRACKET fields R_BRACKET
+    {
+      $$ = $1
+      $$.returnType = $2
+      $$.lBracket = $3
+
+    }
+
+field
+  : int ":" field_required type ident
+
+field_required
+  : /* not specified */
+    {
+      $$ = nil
+    }
+  | REQUIRED
+    {
+      $$ = $1
+    }
+  | OPTIONAL
+    {
+      $$ = $1
+    }
+
 value
   : string
     {
