@@ -11,8 +11,13 @@ import "github.com/minodisk/thriftast/ast"
   include     *ast.Include
   namespace   *ast.Namespace
   typedef     *ast.Typedef
+  Const       *ast.Const
   ident       *ast.Ident
+  value       ast.Value
   string      *ast.String
+  int         *ast.Int
+  float       *ast.Float
+  equal       *ast.Equal
   dot         *ast.Dot
 }
 
@@ -22,17 +27,25 @@ import "github.com/minodisk/thriftast/ast"
 %type <include>     include
 %type <namespace>   namespace
 %type <typedef>     typedef
+%type <Const>       Const
 %type <ident>       ident
+%type <value>       value
 %type <string>      string
+%type <int>         int
+%type <float>       float
 %type <dot>         dot
 
 // Keywords
 %token <include>    INCLUDE
 %token <namespace>  NAMESPACE
 %token <typedef>    TYPEDEF
+%token <Const>      CONST
 // Tokens
 %token <ident>      IDENT
 %token <string>     STRING
+%token <int>        INT
+%token <float>      FLOAT
+%token <equal>      EQUAL
 %token <dot>        DOT
 
 %%
@@ -58,6 +71,10 @@ expressions
       $$ = append($1, $2)
     }
   | expressions typedef
+    {
+      $$ = append($1, $2)
+    }
+  | expressions Const
     {
       $$ = append($1, $2)
     }
@@ -91,6 +108,30 @@ typedef
       $$.Identifier = $3
     }
 
+Const
+  : CONST ident ident EQUAL value
+    {
+      $$ = $1
+      $$.Type = $2
+      $$.Name = $3
+      $$.Equal = $4
+      $$.Value = $5
+    }
+
+value
+  : string
+    {
+      $$ = $1
+    }
+  | int
+    {
+      $$ = $1
+    }
+  | float
+    {
+      $$ = $1
+    }
+
 ident
   : IDENT
     {
@@ -107,6 +148,18 @@ ident
 
 string
   : STRING
+    {
+      $$ = $1
+    }
+
+int
+  : INT
+    {
+      $$ = $1
+    }
+
+float
+  : FLOAT
     {
       $$ = $1
     }

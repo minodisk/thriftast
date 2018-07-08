@@ -16,16 +16,20 @@ func NewNamespace(start, end *Pos) *Namespace {
 	}
 }
 
-func (n *Namespace) Type() string {
-	return "Namespace"
+func (n *Namespace) Start() *Pos {
+	return n.Keyword.Start
+}
+
+func (n *Namespace) End() *Pos {
+	return n.Name.end
 }
 
 func (n *Namespace) MarshalJSON() ([]byte, error) {
 	typed := struct {
-		Type string `json:"type"`
+		ExtType string `json:"type"`
 		Namespace
 	}{
-		n.Type(),
+		"Namespace",
 		*n,
 	}
 	return json.Marshal(typed)

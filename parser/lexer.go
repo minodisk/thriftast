@@ -48,6 +48,9 @@ func (l *Lexer) Lex(lval *yySymType) int {
 		case "typedef":
 			lval.typedef = ast.NewTypedef(start, end)
 			return TYPEDEF
+		case "const":
+			lval.Const = ast.NewConst(start, end)
+			return CONST
 		default:
 			lval.ident = ast.NewIdent(start, end, token)
 			return IDENT
@@ -55,9 +58,18 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	case scanner.String:
 		lval.string = ast.NewString(start, end, token)
 		return STRING
+	case scanner.Int:
+		lval.int = ast.NewInt(start, end, token)
+		return INT
+	case scanner.Float:
+		lval.float = ast.NewFloat(start, end, token)
+		return FLOAT
 	case 46: // .
 		lval.dot = ast.NewDot(start, end)
 		return DOT
+	case 61: // =
+		lval.equal = ast.NewEqual(start, end)
+		return EQUAL
 	default:
 		if token == "" {
 			return t

@@ -16,16 +16,20 @@ func NewTypedef(start, end *Pos) *Typedef {
 	}
 }
 
-func (t *Typedef) Type() string {
-	return "Typedef"
+func (t *Typedef) Start() *Pos {
+	return t.Keyword.Start
+}
+
+func (t *Typedef) End() *Pos {
+	return t.Identifier.end
 }
 
 func (t *Typedef) MarshalJSON() ([]byte, error) {
 	typed := struct {
-		Type string `json:"type"`
+		ExtType string `json:"type"`
 		Typedef
 	}{
-		t.Type(),
+		"Typedef",
 		*t,
 	}
 	return json.Marshal(typed)

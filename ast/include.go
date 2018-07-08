@@ -16,16 +16,20 @@ func NewInclude(start, end *Pos) *Include {
 	}
 }
 
-func (n *Include) Type() string {
-	return "Include"
+func (i *Include) Start() *Pos {
+	return i.Keyword.Start
+}
+
+func (i *Include) End() *Pos {
+	return i.Path.end
 }
 
 func (n *Include) MarshalJSON() ([]byte, error) {
 	typed := struct {
-		Type string `json:"type"`
+		ExtType string `json:"__type__"`
 		Include
 	}{
-		n.Type(),
+		"Include",
 		*n,
 	}
 	return json.Marshal(typed)

@@ -34,7 +34,7 @@ func (i *Ident) Name() string {
 	return i.name
 }
 
-func (i *Ident) Append(j Tokener) *Ident {
+func (i *Ident) Append(j Token) *Ident {
 	return &Ident{
 		start: i.Start(),
 		end:   j.End(),
