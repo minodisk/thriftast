@@ -1,5 +1,7 @@
 package ast
 
+import "encoding/json"
+
 type LR int
 
 const (
@@ -29,10 +31,6 @@ func NewRBrace(start, end *Pos) *Brace {
 	return NewBrace(start, end, Right)
 }
 
-func (d *Brace) Type() string {
-	return "Brace"
-}
-
 func (d *Brace) Start() *Pos {
 	return d.start
 }
@@ -42,5 +40,27 @@ func (d *Brace) End() *Pos {
 }
 
 func (d *Brace) Name() string {
-	return "."
+	switch d.lr {
+	default:
+		return ""
+	case Left:
+		return "{"
+	case Right:
+		return "}"
+	}
+}
+
+func (d *Brace) MarshalJSON() ([]byte, error) {
+	typed := struct {
+		ExpType string `json:"__type__"`
+		Start   *Pos   `json:"start"`
+		End     *Pos   `json:"end"`
+		Name    string `json:"name"`
+	}{
+		"Brace",
+		d.Start(),
+		d.End(),
+		d.Name(),
+	}
+	return json.Marshal(typed)
 }
