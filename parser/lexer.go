@@ -26,9 +26,7 @@ func (l *Lexer) Lex(lval *yySymType) int {
 		Column: end.Column - length,
 	}
 
-	fmt.Println("-----------------------------")
-	fmt.Println(t, token, length, scanner.String)
-	fmt.Printf("%s ~ %s\n", start, end)
+	fmt.Printf("type: %d, token: \"%s\"\n", t, token)
 
 	switch t {
 	case scanner.Ident:
@@ -51,6 +49,9 @@ func (l *Lexer) Lex(lval *yySymType) int {
 		case "const":
 			lval.Const = ast.NewConst(start, end)
 			return CONST
+		case "struct":
+			lval.Struct = ast.NewStruct(start, end)
+			return STRUCT
 		default:
 			lval.ident = ast.NewIdent(start, end, token)
 			return IDENT
@@ -67,9 +68,18 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	case 46: // .
 		lval.dot = ast.NewDot(start, end)
 		return DOT
+	case 58: // :
+		lval.colon = ast.NewColon(start, end)
+		return COLON
 	case 61: // =
 		lval.equal = ast.NewEqual(start, end)
 		return EQUAL
+	case 123: // {
+		lval.brace = ast.NewLBrace(start, end)
+		return LBRACE
+	case 125: // }
+		lval.brace = ast.NewRBrace(start, end)
+		return RBRACE
 	default:
 		if token == "" {
 			return t

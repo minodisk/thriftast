@@ -12,6 +12,12 @@ import "github.com/minodisk/thriftast/ast"
   namespace   *ast.Namespace
   typedef     *ast.Typedef
   Const       *ast.Const
+  Struct      *ast.Struct
+  fields      []*ast.Field
+  field       *ast.Field
+  req         *ast.Req
+  required    *ast.Req
+  optional    *ast.Req
   ident       *ast.Ident
   value       ast.Value
   string      *ast.String
@@ -19,6 +25,8 @@ import "github.com/minodisk/thriftast/ast"
   float       *ast.Float
   equal       *ast.Equal
   dot         *ast.Dot
+  colon       *ast.Colon
+  brace       *ast.Brace
 }
 
 // Types
@@ -28,18 +36,31 @@ import "github.com/minodisk/thriftast/ast"
 %type <namespace>   namespace
 %type <typedef>     typedef
 %type <Const>       Const
+%type <Struct>      Struct
+%type <fields>      fields
+%type <field>       field
+%type <req>         req
+%type <required>    required
+%type <optional>    optional
 %type <ident>       ident
 %type <value>       value
 %type <string>      string
 %type <int>         int
 %type <float>       float
 %type <dot>         dot
+%type <brace>       brace
 
 // Keywords
 %token <include>    INCLUDE
 %token <namespace>  NAMESPACE
 %token <typedef>    TYPEDEF
 %token <Const>      CONST
+%token <Struct>     STRUCT
+%token <required>   REQUIRED
+%token <optional>   OPTIONAL
+%token <service>    SERVICE
+%token <oneway>     ONEWAY
+
 // Tokens
 %token <ident>      IDENT
 %token <string>     STRING
@@ -47,6 +68,11 @@ import "github.com/minodisk/thriftast/ast"
 %token <float>      FLOAT
 %token <equal>      EQUAL
 %token <dot>        DOT
+%token <colon>      COLON
+%token <brace>      LBRACE
+%token <brace>      RBRACE
+%token <lparen>     LPAREN
+%token <rparen>     RPAREN
 
 %%
 
@@ -62,21 +88,25 @@ expressions
     {
       $$ = nil
     }
-  | expressions include
+  | include
     {
-      $$ = append($1, $2)
+      $$ = append($$, $1)
     }
-  | expressions namespace
+  | namespace
     {
-      $$ = append($1, $2)
+      $$ = append($$, $1)
     }
-  | expressions typedef
+  | typedef
     {
-      $$ = append($1, $2)
+      $$ = append($$, $1)
     }
-  | expressions Const
+  | Const
     {
-      $$ = append($1, $2)
+      $$ = append($$, $1)
+    }
+  | Struct
+    {
+      $$ = append($$, $1)
     }
 
 include
@@ -118,28 +148,66 @@ Const
       $$.Value = $5
     }
 
-function
-  : ident IDENT L_BRACKET fields R_BRACKET
+Struct
+  : STRUCT IDENT LBRACE fields RBRACE
     {
       $$ = $1
-      $$.returnType = $2
-      $$.lBracket = $3
+      $$.Name = $2
+      $$.LBrace = $3
+      $$.Fields = $4
+      $$.RBrace = $5
+    }
 
+fields
+  : field
+    {
+      $$ = append($$, $1)
     }
 
 field
-  : int ":" field_required type ident
+  : int COLON req ident ident
+    {
+      $$ = ast.NewField()
+      $$.ID = $1
+      $$.Colon = $2
+      $$.Req = $3
+      $$.Type = $4
+      $$.Name = $5
+    }
+  | int COLON optional ident ident EQUAL value
+    {
+      $$ = ast.NewField()
+      $$.ID = $1
+      $$.Colon = $2
+      $$.Req = $3
+      $$.Type = $4
+      $$.Name = $5
+      $$.Equal = $6
+      $$.DefaultValue = $7
+    }
 
-field_required
-  : /* not specified */
+req
+  :
     {
       $$ = nil
     }
-  | REQUIRED
+  | required
     {
       $$ = $1
     }
-  | OPTIONAL
+  | optional
+    {
+      $$ = $1
+    }
+
+required
+  : REQUIRED
+    {
+      $$ = $1
+    }
+
+optional
+  : OPTIONAL
     {
       $$ = $1
     }
@@ -193,7 +261,17 @@ float
 dot
   : DOT
     {
-      $$ =$1
+      $$ = $1
+    }
+
+brace
+  : LBRACE
+    {
+      $$ = $1
+    }
+  | RBRACE
+    {
+      $$ = $1
     }
 
 %%
