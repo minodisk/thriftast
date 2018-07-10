@@ -18,11 +18,11 @@ func TestDiff(t *testing.T, in string, want *ast.Program) {
 		return
 	}
 
-	g, err := json.Marshal(got)
+	g, err := json.MarshalIndent(got, "", "  ")
 	if err != nil {
 		t.Fatal(err)
 	}
-	w, err := json.Marshal(want)
+	w, err := json.MarshalIndent(want, "", "  ")
 	if err != nil {
 		t.Fatal(err)
 	}

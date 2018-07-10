@@ -33,8 +33,8 @@ import "github.com/minodisk/thriftast/ast"
 %token <typedef>    TYPEDEF
 %token <Const>      CONST
 %token <Struct>     STRUCT
-%token <req>   REQUIRED
-%token <req>   OPTIONAL
+%token <req>        REQUIRED
+%token <req>        OPTIONAL
 %token <service>    SERVICE
 %token <oneway>     ONEWAY
 
@@ -173,6 +173,7 @@ field
       $$ = ast.NewField()
       $$.ID = $1
       $$.Colon = $2
+      __yyfmt__.Println($3)
       $$.Req = $3
       $$.Type = $4
       $$.Name = $5

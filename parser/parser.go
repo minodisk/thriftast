@@ -78,7 +78,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line ./parser/parser.go.y:220
+//line ./parser/parser.go.y:221
 
 //line yacctab:1
 var yyExca = [...]int{
@@ -615,13 +615,14 @@ yydefault:
 			yyVAL.field = ast.NewField()
 			yyVAL.field.ID = yyDollar[1].int
 			yyVAL.field.Colon = yyDollar[2].colon
+			__yyfmt__.Println(yyDollar[3].req)
 			yyVAL.field.Req = yyDollar[3].req
 			yyVAL.field.Type = yyDollar[4].ident
 			yyVAL.field.Name = yyDollar[5].ident
 		}
 	case 19:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line ./parser/parser.go.y:181
+		//line ./parser/parser.go.y:182
 		{
 			yyVAL.field = ast.NewField()
 			yyVAL.field.ID = yyDollar[1].int
@@ -634,37 +635,37 @@ yydefault:
 		}
 	case 20:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line ./parser/parser.go.y:194
+		//line ./parser/parser.go.y:195
 		{
 			yyVAL.value = yyDollar[1].string
 		}
 	case 21:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line ./parser/parser.go.y:198
+		//line ./parser/parser.go.y:199
 		{
 			yyVAL.value = yyDollar[1].int
 		}
 	case 22:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line ./parser/parser.go.y:202
+		//line ./parser/parser.go.y:203
 		{
 			yyVAL.value = yyDollar[1].float
 		}
 	case 23:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line ./parser/parser.go.y:208
+		//line ./parser/parser.go.y:209
 		{
 			yyVAL.ident = yyDollar[1].ident
 		}
 	case 24:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line ./parser/parser.go.y:212
+		//line ./parser/parser.go.y:213
 		{
 			yyVAL.ident = yyDollar[1].ident.Append(yyDollar[2].dot)
 		}
 	case 25:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line ./parser/parser.go.y:216
+		//line ./parser/parser.go.y:217
 		{
 			yyVAL.ident = yyDollar[1].ident.Append(yyDollar[2].ident)
 		}

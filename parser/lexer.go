@@ -29,7 +29,7 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	fmt.Printf("type: %d, token: \"%s\"\n", t, token)
 
 	switch t {
-	case scanner.Ident:
+	case scanner.Ident: // -2
 		switch token {
 		case "include":
 			lval.include = ast.NewInclude(
@@ -52,6 +52,12 @@ func (l *Lexer) Lex(lval *yySymType) int {
 		case "struct":
 			lval.Struct = ast.NewStruct(start, end)
 			return STRUCT
+		case "required":
+			lval.req = ast.NewRequired(start, end)
+			return REQUIRED
+		case "optional":
+			lval.req = ast.NewOptional(start, end)
+			return OPTIONAL
 		default:
 			lval.ident = ast.NewIdent(start, end, token)
 			return IDENT

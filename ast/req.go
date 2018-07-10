@@ -1,5 +1,7 @@
 package ast
 
+import "encoding/json"
+
 type RO int
 
 const (
@@ -29,10 +31,6 @@ func NewOptional(start, end *Pos) *Req {
 	return NewReq(start, end, Optional)
 }
 
-func (d *Req) Type() string {
-	return "Req"
-}
-
 func (d *Req) Start() *Pos {
 	return d.start
 }
@@ -46,8 +44,23 @@ func (d *Req) Name() string {
 	default:
 		return ""
 	case Required:
-		return "Required"
+		return "required"
 	case Optional:
-		return "Optional"
+		return "optional"
 	}
+}
+
+func (d *Req) MarshalJSON() ([]byte, error) {
+	typed := struct {
+		Type  string `json:"type"`
+		Start *Pos   `json:"start"`
+		End   *Pos   `json:"end"`
+		Name  string `json:"name"`
+	}{
+		"Req",
+		d.Start(),
+		d.End(),
+		d.Name(),
+	}
+	return json.Marshal(typed)
 }
