@@ -8,5 +8,8 @@ yacc: $(YACC_SRC)
 test: $(YACC_DIST) $(TEST_FILES)
 	go test ./...
 
+run:
+	go run main.go
+
 clean:
 	rm $(YACC_DIST)

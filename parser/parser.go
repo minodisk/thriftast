@@ -48,6 +48,7 @@ const DOT = 57360
 const COLON = 57361
 const LBRACE = 57362
 const RBRACE = 57363
+const SEP = 57364
 
 var yyToknames = [...]string{
 	"$end",
@@ -71,6 +72,7 @@ var yyToknames = [...]string{
 	"COLON",
 	"LBRACE",
 	"RBRACE",
+	"SEP",
 }
 var yyStatenames = [...]string{}
 
@@ -78,7 +80,7 @@ const yyEofCode = 1
 const yyErrCode = 2
 const yyInitialStackSize = 16
 
-//line ./parser/parser.go.y:221
+//line ./parser/parser.go.y:226
 
 //line yacctab:1
 var yyExca = [...]int{
@@ -89,56 +91,60 @@ var yyExca = [...]int{
 
 const yyPrivate = 57344
 
-const yyLast = 47
+const yyLast = 54
 
 var yyAct = [...]int{
 
-	21, 31, 35, 26, 36, 32, 33, 34, 22, 14,
-	16, 17, 18, 30, 15, 20, 15, 23, 24, 25,
-	42, 15, 15, 13, 15, 27, 19, 8, 9, 10,
-	11, 12, 37, 38, 39, 29, 28, 7, 40, 6,
-	5, 41, 4, 3, 43, 2, 1,
+	28, 38, 14, 42, 33, 43, 39, 40, 41, 20,
+	22, 23, 24, 21, 21, 29, 21, 49, 34, 37,
+	21, 27, 25, 30, 31, 32, 21, 19, 8, 9,
+	10, 11, 12, 26, 45, 46, 44, 13, 15, 16,
+	17, 18, 36, 35, 7, 47, 6, 5, 48, 4,
+	3, 50, 2, 1,
 }
 var yyPact = [...]int{
 
-	23, -1000, -1000, -1000, -1000, -1000, -1000, -1000, 9, 11,
-	11, 11, 13, -1000, 1, -10, 11, 11, 11, -17,
-	-1000, 11, -1000, 11, 11, 8, -2, -9, -19, -1000,
-	-15, -1000, -1000, -1000, -1000, -1000, 24, 11, -1000, -1000,
-	11, 3, -9, -1000,
+	-1000, -1000, 24, -20, -20, -20, -20, -20, 13, 3,
+	3, 3, 9, -20, -1000, -20, -20, -20, -20, -1000,
+	7, -3, 3, 3, 3, -16, -20, -1000, 3, -1000,
+	3, 3, 1, 4, -8, -18, -1000, -14, -1000, -1000,
+	-1000, -1000, -1000, 25, 3, -1000, -1000, 3, 0, -8,
+	-1000,
 }
 var yyPgo = [...]int{
 
-	0, 46, 45, 43, 42, 40, 39, 37, 36, 35,
-	32, 0, 1,
+	0, 53, 52, 50, 49, 47, 46, 44, 43, 42,
+	36, 0, 1, 33,
 }
 var yyR1 = [...]int{
 
-	0, 1, 2, 2, 2, 2, 2, 2, 3, 3,
-	4, 5, 6, 7, 8, 10, 10, 10, 9, 9,
-	12, 12, 12, 11, 11, 11,
+	0, 1, 2, 2, 2, 2, 2, 2, 13, 13,
+	13, 3, 3, 4, 5, 6, 7, 8, 10, 10,
+	10, 9, 9, 12, 12, 12, 11, 11, 11,
 }
 var yyR2 = [...]int{
 
-	0, 1, 0, 1, 1, 1, 1, 1, 2, 3,
-	3, 3, 5, 5, 1, 0, 1, 1, 5, 7,
-	1, 1, 1, 1, 2, 2,
+	0, 1, 0, 3, 3, 3, 3, 3, 0, 1,
+	2, 2, 3, 3, 3, 5, 5, 1, 0, 1,
+	1, 5, 7, 1, 1, 1, 1, 2, 2,
 }
 var yyChk = [...]int{
 
 	-1000, -1, -2, -3, -4, -5, -6, -7, 4, 5,
-	6, 7, 8, 14, -11, 13, -11, -11, -11, 13,
-	14, -11, 18, -11, -11, -11, 20, 17, -8, -9,
-	15, -12, 14, 15, 16, 21, 19, -10, 9, 10,
-	-11, -11, 17, -12,
+	6, 7, 8, -13, 22, -13, -13, -13, -13, 14,
+	-11, 13, -11, -11, -11, 13, -13, 14, -11, 18,
+	-11, -11, -11, 20, 17, -8, -9, 15, -12, 14,
+	15, 16, 21, 19, -10, 9, 10, -11, -11, 17,
+	-12,
 }
 var yyDef = [...]int{
 
-	2, -2, 1, 3, 4, 5, 6, 7, 0, 0,
-	0, 0, 0, 8, 0, 23, 0, 0, 0, 0,
-	9, 25, 24, 10, 11, 0, 0, 0, 0, 14,
-	0, 12, 20, 21, 22, 13, 15, 0, 16, 17,
-	0, 18, 0, 19,
+	2, -2, 1, 8, 8, 8, 8, 8, 0, 0,
+	0, 0, 0, 3, 9, 4, 5, 6, 7, 11,
+	0, 26, 0, 0, 0, 0, 8, 12, 28, 27,
+	13, 14, 0, 0, 0, 0, 17, 0, 15, 23,
+	24, 25, 16, 18, 0, 19, 20, 0, 21, 0,
+	22,
 }
 var yyTok1 = [...]int{
 
@@ -148,6 +154,7 @@ var yyTok2 = [...]int{
 
 	2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
 	12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+	22,
 }
 var yyTok3 = [...]int{
 	0,
@@ -492,81 +499,81 @@ yydefault:
 
 	case 1:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line ./parser/parser.go.y:70
+		//line ./parser/parser.go.y:71
 		{
 			yyVAL.program = &ast.Program{Expressions: yyDollar[1].expressions}
 			yylex.(*Lexer).Program = yyVAL.program
 		}
 	case 2:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line ./parser/parser.go.y:77
+		//line ./parser/parser.go.y:78
 		{
 			yyVAL.expressions = nil
 		}
 	case 3:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		//line ./parser/parser.go.y:81
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line ./parser/parser.go.y:82
 		{
-			yyVAL.expressions = append(yyVAL.expressions, yyDollar[1].include)
+			yyVAL.expressions = append(yyDollar[1].expressions, yyDollar[2].include)
 		}
 	case 4:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		//line ./parser/parser.go.y:85
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line ./parser/parser.go.y:86
 		{
-			yyVAL.expressions = append(yyVAL.expressions, yyDollar[1].namespace)
+			yyVAL.expressions = append(yyDollar[1].expressions, yyDollar[2].namespace)
 		}
 	case 5:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		//line ./parser/parser.go.y:89
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line ./parser/parser.go.y:90
 		{
-			yyVAL.expressions = append(yyVAL.expressions, yyDollar[1].typedef)
+			yyVAL.expressions = append(yyDollar[1].expressions, yyDollar[2].typedef)
 		}
 	case 6:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		//line ./parser/parser.go.y:93
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line ./parser/parser.go.y:94
 		{
-			yyVAL.expressions = append(yyVAL.expressions, yyDollar[1].Const)
+			yyVAL.expressions = append(yyDollar[1].expressions, yyDollar[2].Const)
 		}
 	case 7:
-		yyDollar = yyS[yypt-1 : yypt+1]
-		//line ./parser/parser.go.y:97
+		yyDollar = yyS[yypt-3 : yypt+1]
+		//line ./parser/parser.go.y:98
 		{
-			yyVAL.expressions = append(yyVAL.expressions, yyDollar[1].Struct)
+			yyVAL.expressions = append(yyDollar[1].expressions, yyDollar[2].Struct)
 		}
-	case 8:
+	case 11:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line ./parser/parser.go.y:103
+		//line ./parser/parser.go.y:109
 		{
 			yyVAL.include = yyDollar[1].include
 			yyVAL.include.Path = yyDollar[2].string
 		}
-	case 9:
+	case 12:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line ./parser/parser.go.y:108
+		//line ./parser/parser.go.y:114
 		{
 			yyVAL.include = yyDollar[1].include
 			yyVAL.include.Name = yyDollar[2].ident
 			yyVAL.include.Path = yyDollar[3].string
 		}
-	case 10:
+	case 13:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line ./parser/parser.go.y:116
+		//line ./parser/parser.go.y:122
 		{
 			yyVAL.namespace = yyDollar[1].namespace
 			yyVAL.namespace.Scope = yyDollar[2].ident
 			yyVAL.namespace.Name = yyDollar[3].ident
 		}
-	case 11:
+	case 14:
 		yyDollar = yyS[yypt-3 : yypt+1]
-		//line ./parser/parser.go.y:124
+		//line ./parser/parser.go.y:130
 		{
 			yyVAL.typedef = yyDollar[1].typedef
 			yyVAL.typedef.DefinitionType = yyDollar[2].ident
 			yyVAL.typedef.Identifier = yyDollar[3].ident
 		}
-	case 12:
+	case 15:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line ./parser/parser.go.y:132
+		//line ./parser/parser.go.y:138
 		{
 			yyVAL.Const = yyDollar[1].Const
 			yyVAL.Const.Type = yyDollar[2].ident
@@ -574,9 +581,9 @@ yydefault:
 			yyVAL.Const.Equal = yyDollar[4].equal
 			yyVAL.Const.Value = yyDollar[5].value
 		}
-	case 13:
+	case 16:
 		yyDollar = yyS[yypt-5 : yypt+1]
-		//line ./parser/parser.go.y:142
+		//line ./parser/parser.go.y:148
 		{
 			yyVAL.Struct = yyDollar[1].Struct
 			yyVAL.Struct.Name = yyDollar[2].ident
@@ -584,45 +591,44 @@ yydefault:
 			yyVAL.Struct.Fields = yyDollar[4].fields
 			yyVAL.Struct.RBrace = yyDollar[5].brace
 		}
-	case 14:
+	case 17:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line ./parser/parser.go.y:152
+		//line ./parser/parser.go.y:158
 		{
 			yyVAL.fields = append(yyVAL.fields, yyDollar[1].field)
 		}
-	case 15:
+	case 18:
 		yyDollar = yyS[yypt-0 : yypt+1]
-		//line ./parser/parser.go.y:158
+		//line ./parser/parser.go.y:164
 		{
 			yyVAL.req = nil
 		}
-	case 16:
+	case 19:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line ./parser/parser.go.y:162
+		//line ./parser/parser.go.y:168
 		{
 			yyVAL.req = yyDollar[1].req
 		}
-	case 17:
+	case 20:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line ./parser/parser.go.y:166
-		{
-			yyVAL.req = yyDollar[1].req
-		}
-	case 18:
-		yyDollar = yyS[yypt-5 : yypt+1]
 		//line ./parser/parser.go.y:172
+		{
+			yyVAL.req = yyDollar[1].req
+		}
+	case 21:
+		yyDollar = yyS[yypt-5 : yypt+1]
+		//line ./parser/parser.go.y:178
 		{
 			yyVAL.field = ast.NewField()
 			yyVAL.field.ID = yyDollar[1].int
 			yyVAL.field.Colon = yyDollar[2].colon
-			__yyfmt__.Println(yyDollar[3].req)
 			yyVAL.field.Req = yyDollar[3].req
 			yyVAL.field.Type = yyDollar[4].ident
 			yyVAL.field.Name = yyDollar[5].ident
 		}
-	case 19:
+	case 22:
 		yyDollar = yyS[yypt-7 : yypt+1]
-		//line ./parser/parser.go.y:182
+		//line ./parser/parser.go.y:187
 		{
 			yyVAL.field = ast.NewField()
 			yyVAL.field.ID = yyDollar[1].int
@@ -633,39 +639,39 @@ yydefault:
 			yyVAL.field.Equal = yyDollar[6].equal
 			yyVAL.field.DefaultValue = yyDollar[7].value
 		}
-	case 20:
+	case 23:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line ./parser/parser.go.y:195
+		//line ./parser/parser.go.y:200
 		{
 			yyVAL.value = yyDollar[1].string
 		}
-	case 21:
+	case 24:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line ./parser/parser.go.y:199
+		//line ./parser/parser.go.y:204
 		{
 			yyVAL.value = yyDollar[1].int
 		}
-	case 22:
+	case 25:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line ./parser/parser.go.y:203
+		//line ./parser/parser.go.y:208
 		{
 			yyVAL.value = yyDollar[1].float
 		}
-	case 23:
+	case 26:
 		yyDollar = yyS[yypt-1 : yypt+1]
-		//line ./parser/parser.go.y:209
+		//line ./parser/parser.go.y:214
 		{
 			yyVAL.ident = yyDollar[1].ident
 		}
-	case 24:
+	case 27:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line ./parser/parser.go.y:213
+		//line ./parser/parser.go.y:218
 		{
 			yyVAL.ident = yyDollar[1].ident.Append(yyDollar[2].dot)
 		}
-	case 25:
+	case 28:
 		yyDollar = yyS[yypt-2 : yypt+1]
-		//line ./parser/parser.go.y:217
+		//line ./parser/parser.go.y:222
 		{
 			yyVAL.ident = yyDollar[1].ident.Append(yyDollar[2].ident)
 		}

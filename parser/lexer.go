@@ -2,9 +2,9 @@ package parser
 
 import (
 	"fmt"
-	"text/scanner"
 
 	"github.com/minodisk/thriftast/ast"
+	"github.com/minodisk/thriftast/scanner"
 )
 
 // Lexer scans Thrift IDL to tokens.
@@ -15,7 +15,8 @@ type Lexer struct {
 
 // Lex lexes chunk to token and returns the type of token.
 func (l *Lexer) Lex(lval *yySymType) int {
-	t := int(l.Scan())
+	s := l.Scan()
+	t := int(s)
 
 	token := l.TokenText()
 	length := len(token)
@@ -25,7 +26,6 @@ func (l *Lexer) Lex(lval *yySymType) int {
 		Line:   end.Line,
 		Column: end.Column - length,
 	}
-
 	fmt.Printf("type: %d, token: \"%s\"\n", t, token)
 
 	switch t {
@@ -71,6 +71,11 @@ func (l *Lexer) Lex(lval *yySymType) int {
 	case scanner.Float:
 		lval.float = ast.NewFloat(start, end, token)
 		return FLOAT
+	case int(','), int(';'):
+		return SEP
+	case int('\n'):
+		fmt.Println("------------------------", l.Column)
+		return SEP
 	case 46: // .
 		lval.dot = ast.NewDot(start, end)
 		return DOT
@@ -97,5 +102,8 @@ func (l *Lexer) Lex(lval *yySymType) int {
 
 // Error throws lexing error.
 func (l *Lexer) Error(e string) {
+	fmt.Println("=============")
+	fmt.Println(e)
+	fmt.Println("=============")
 	panic(e)
 }

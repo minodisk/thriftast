@@ -48,6 +48,7 @@ import "github.com/minodisk/thriftast/ast"
 %token <colon>      COLON
 %token <brace>      LBRACE
 %token <brace>      RBRACE
+%token SEP
 
 // Types
 %type <program>     program
@@ -77,26 +78,31 @@ expressions
     {
       $$ = nil
     }
-  | include
+  | expressions include sep
     {
-      $$ = append($$, $1)
+      $$ = append($1, $2)
     }
-  | namespace
+  | expressions namespace sep
     {
-      $$ = append($$, $1)
+      $$ = append($1, $2)
     }
-  | typedef
+  | expressions typedef sep
     {
-      $$ = append($$, $1)
+      $$ = append($1, $2)
     }
-  | Const
+  | expressions Const sep
     {
-      $$ = append($$, $1)
+      $$ = append($1, $2)
     }
-  | Struct
+  | expressions Struct sep
     {
-      $$ = append($$, $1)
+      $$ = append($1, $2)
     }
+
+sep
+  :
+  | SEP
+  | sep sep
 
 include
   : INCLUDE STRING
@@ -173,7 +179,6 @@ field
       $$ = ast.NewField()
       $$.ID = $1
       $$.Colon = $2
-      __yyfmt__.Println($3)
       $$.Req = $3
       $$.Type = $4
       $$.Name = $5

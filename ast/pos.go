@@ -2,7 +2,8 @@ package ast
 
 import (
 	"fmt"
-	"text/scanner"
+
+	"github.com/minodisk/thriftast/scanner"
 )
 
 type Pos struct {
